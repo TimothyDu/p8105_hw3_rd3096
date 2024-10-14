@@ -38,9 +38,8 @@ scale_fill_discrete = scale_fill_viridis_d
 
 we explore the dataset and get a summary of the dataset
 
-```{r}
-str(ny_noaa)
-summary(ny_noaa)
+```{r read data}
+data("ny_noaa")
 ```
 
 ### we write a short description of the dataset and answer the following questions
@@ -148,6 +147,77 @@ acce = read.csv("./acce.csv",na=c("NA","","."))
 
 ### load, tidy and merge the datasets
 
-we will clean the dataset,then we will merge the dataset by id.
+we will clean the dataset and recode sex and education as factor
+
+```{r}
+demo_clean=
+  demo %>% 
+  filter(age>=21) %>% 
+  mutate(
+    sex=factor(
+      case_match(
+        sex,
+        1~"Male",
+        2~"Female"
+      ),
+      levels=c("Male", "Female")
+    ),
+    education = factor(
+      case_match(
+        education, 
+        1 ~ "Less than high school",
+        2 ~ "High school equivalent",
+        3 ~ "More than high school",
+      ),
+      levels = c("Less than high school", "High school equivalent", "More than high school")  # Set as ordered factor because education has a natural order
+    )
+  ) %>% 
+  drop_na(sex, age, BMI, education)
+```
+now we have ensured that any rows with missing values in sex, age, BMI, or education are dropped after the necessary cleaning operations are completed. And we have recoded sex and education as factor and define the level of each variable.
+
+we will merge the two dataset by SEQN
+```{r}
+merged_data=
+  left_join(demo_clean, acce, by = "SEQN")
+```
+
+produce a table for the number of men and women in each education category, and create a visualization of the age distributions for men and women in each education category
+```{r}
+education_sex_table=
+  demo_clean %>% 
+  count(sex,education) %>% 
+  arrange(education) %>% 
+  select(education,everything()) %>% 
+  knitr::kable()
+
+education_sex_table
+
+
+age_sex_plot=
+  demo_clean %>% 
+  ggplot(aes(x=age,fill=sex))+
+  geom_density(alpha=0.5)+
+  facet_grid(.~ education)+
+  labs(
+    title = "Age Distributions for Men and Women by Education Level",
+    x = "Age",
+    y = "Density",
+    fill = "Sex"
+  ) +
+  theme_minimal()
+
+age_sex_plot
+```
+For our number of men and women in each education table
+
+* The table shows the number of men and women in each education category.
+
+*Less than high school: There are 27 males and 28 females, indicating a nearly equal distribution between men and women.
+
+*High school equivalent: The count of men is higher (35) compared to women (23), suggesting a higher representation of males in this category.
+
+*More than high school: Females slightly outnumber males, with 59 females and 56 males. This shows a relatively balanced representation but with a slight female dominance in the "more than high school" group.
+
 
 
