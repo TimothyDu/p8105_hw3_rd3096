@@ -209,7 +209,7 @@ age_sex_plot=
 
 age_sex_plot
 ```
-For our number of men and women in each education table
+For our number of men and women in each education table:
 
 * The table shows the number of men and women in each education category.
 
@@ -218,6 +218,50 @@ For our number of men and women in each education table
 *High school equivalent: The count of men is higher (35) compared to women (23), suggesting a higher representation of males in this category.
 
 *More than high school: Females slightly outnumber males, with 59 females and 56 males. This shows a relatively balanced representation but with a slight female dominance in the "more than high school" group.
+
+Comment on the age distribution plot:
+* Less than high school: Men and women have similar age distributions, but men show a more distinct peak around ages 50-60, while women have a smoother distribution.
+
+* High school equivalent: Men and women have similar age distributions, with a slight difference in their peaks. Men show a more varied age distribution, and the distributions overlap more.
+
+* More than high school: there is a prominent peak for women in the 20–40 age range, indicating that a higher proportion of women in this category are concentrated in this younger age group. This peak is more pronounced than for men in the same category, who have a broader distribution over the age range, with a smaller peak in the same age group.
+
+```{r}
+total_activity_new = 
+  merged_data %>%
+  pivot_longer(
+    cols = starts_with("min"), # Select minute columns
+    names_to = "minute", 
+    values_to = "activity"
+  ) %>%
+  group_by(SEQN, sex, age, education) %>% # Group by SEQN and other demographic variables
+  summarize(total_activity = sum(activity, na.rm = TRUE)) %>%
+  ungroup() # Ungroup after summarizing
+
+activity_age_plot=
+  total_activity_new %>% 
+  ggplot(aes(x=age, y=total_activity, color= sex)) +
+  geom_point(alpha=0.5)+
+  geom_smooth(se=FALSE)+
+  facet_grid(.~ education)+
+  labs(
+    title = "Total Activity vs Age by Sex and Education Level",
+    x = "Age",
+    y = "Total Activity",
+    color = "Sex"
+  ) +
+  theme_minimal() 
+  
+activity_age_plot
+```
+Based on the three plots we created:
+In all education levels, women tend to have slightly higher total activity levels compared to men, especially in younger age ranges (20–40). However, this gap narrows as participants age.Physical activity declines with age in both men and women across all education levels.Higher education seems to be associated with more stable activity levels over the lifespan, particularly for women.Women tend to have higher total activity levels compared to men in younger ages, but this difference diminishes in older age.
+
+
+
+
+
+
 
 
 
