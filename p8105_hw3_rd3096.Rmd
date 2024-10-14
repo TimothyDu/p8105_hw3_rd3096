@@ -40,16 +40,32 @@ The variable types based on our output are listed as follows:
 Missing data is a significant issue in the ny_noaa dataset, especially for snow depth (snwd) and snowfall (snow), Precipitation has less missing data, but it still affects a non-negligible portion of the dataset.
 
 we will do some data cleaning for subquestion 1
-```{r}
 
-ny_noaa_cleaned <- ny_noaa %>%
+```{r}
+ny_noaa_cleaned = 
+  ny_noaa %>%
+  separate(date, into = c("year", "month", "day"), convert = TRUE) %>%
   mutate(
-    year = as.numeric(format(date, "%Y")),
-    month = as.numeric(format(date, "%m")),
-    day = as.numeric(format(date, "%d"))
+    tmax = as.numeric(tmax),    
+    tmin = as.numeric(tmin)               
   )
 
+ny_noaa_cleaned %>%
+  group_by(snow) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
 ```
+After we cleaned our dataset, CONVERT the variables into numeric and count the number of observed values, we found out:
 
+1. 0 mm of snowfall is the most frequently observed value, with 2,008,508 instances. This is because many days throughout the year do not experience snowfall, especially during non-winter months and in areas where snow is rare.
+
+2. There are 381,221 missing values (NA) in the dataset for snowfall. These might correspond to missing data for days or locations where snowfall was not recorded.
+
+3. Other common values include 25 mm, 13 mm, and 51 mm of snowfall, which likely represent light to moderate snowfall amounts. These values are typical during days when snow does occur, especially in regions that experience winter weather regularly.
+
+we will make a two-panel plot for subquestion2
+```{r}
+
+```
 
 
