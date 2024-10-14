@@ -1,0 +1,9 @@
+---
+title: "p8105_hw3_rd3096"
+output: github_document
+---
+
+```{r setup}
+library(tidyverse)
+```
+
