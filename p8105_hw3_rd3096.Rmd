@@ -387,7 +387,38 @@ ride_duration_plot=
 
 ride_duration_plot
 ```
+1. July vs. January:
+July 2020 and 2024: In both years, the median ride duration in July is consistently higher compared to January. This is expected, as July likely represents warmer weather, which could encourage longer rides.
+January: The median ride duration in January remains more stable across the days of the week and is generally lower than in July. This might be influenced by colder temperatures and less favorable weather for biking.
+Day of the Week:
 
+2. Weekend Effect: 
+In both July 2020 and July 2024, there is a notable increase in the median ride duration on Saturdays and Sundays, indicating that people may take longer rides during weekends, possibly for leisure. This pattern is less pronounced in January but still present, particularly on weekends in January 2024.
+
+Weekdays: During weekdays, the median ride duration in July is relatively consistent, though Fridays in July 2024 and Mondays in July 2020 see a slight rise.
+
+3. Year Comparison:
+2020 vs. 2024: The ride durations seem slightly higher in 2024, particularly in July. This could suggest changes in user behavior or system expansion, although the effect varies somewhat by day of the week.
+
+
+we make a figure that shows the impact of month, membership status, and bike type on the distribution of ride duration
+```{r}
+citi_2024_plot=
+  combined_bike %>% 
+  filter(year == 2024) %>% 
+  ggplot(aes(x = duration, fill = member_casual)) +
+  geom_density(alpha = 0.5) +  
+  facet_grid(rideable_type ~ month) +  # Separate panels for bike type and month
+  labs(
+    title = "Impact of Month, Membership Status, and Bike Type on Ride Duration in 2024",
+    x = "Ride Duration (minutes)",
+    y = "Density",
+    fill = "Membership Status"
+  ) +
+  theme_minimal()
+
+citi_2024_plot
+```
 
 
 
