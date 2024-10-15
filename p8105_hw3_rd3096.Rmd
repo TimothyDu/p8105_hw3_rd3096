@@ -258,6 +258,33 @@ Based on the three plots we created:
 In all education levels, women tend to have slightly higher total activity levels compared to men, especially in younger age ranges (20–40). However, this gap narrows as participants age.Physical activity declines with age in both men and women across all education levels.Higher education seems to be associated with more stable activity levels over the lifespan, particularly for women.Women tend to have higher total activity levels compared to men in younger ages, but this difference diminishes in older age.
 
 
+```{r}
+merged_long=
+  merged_data %>% 
+  pivot_longer(
+    cols=starts_with("min"),
+    names_to = "minute", # Create a column called "minute"
+    names_prefix = "min",
+    values_to = "activity" 
+  ) %>% 
+  mutate(minute = as.numeric(minute))
+  
+activity_time_plot=
+  merged_long %>% 
+  ggplot(aes(x=minute,y=activity, color=sex)) +
+  geom_smooth(se = FALSE) +   
+  facet_grid(. ~ education) +    
+  labs(
+    title = "24-hour Activity Time Courses by Education Level and Sex",
+    x = "Minute of the Day",
+    y = "Activity (MIMS)"
+  ) +
+  theme_minimal() 
+
+activity_time_plot
+```
+The plot suggests that across all education levels, women tend to show slightly higher overall activity compared to men, particularly during peak activity hours. However, the differences are subtle, and the overall daily activity pattern is quite similar across education levels. This might indicate that education level does not dramatically affect the general structure of activity throughout the day but could influence the intensity of activity at peak times.
+
 
 
 
