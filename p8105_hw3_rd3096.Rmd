@@ -286,7 +286,55 @@ activity_time_plot
 The plot suggests that across all education levels, women tend to show slightly higher overall activity compared to men, particularly during peak activity hours. However, the differences are subtle, and the overall daily activity pattern is quite similar across education levels. This might indicate that education level does not dramatically affect the general structure of activity throughout the day but could influence the intensity of activity at peak times.
 
 
+## problem 3
 
+### import 4 csv datafiles
+```{r}
+jan_2020 = 
+  read_csv("./citibike/Jan 2020 Citi.csv") %>% 
+  mutate(
+    year=2020,
+    month="january"
+  ) %>% 
+  select(year, month, everything())
+
+jan_2024 = 
+  read_csv("./citibike/Jan 2024 Citi.csv") %>% 
+  mutate(
+    year=2024,
+    month="january"
+  ) %>% 
+  select(year, month, everything())
+
+july_2020 = 
+  read_csv("./citibike/July 2020 Citi.csv") %>% 
+  mutate(
+    year=2020,
+    month="july"
+  ) %>% 
+  select(year, month, everything())
+
+july_2024 = 
+  read_csv("./citibike/July 2024 Citi.csv") %>% 
+  mutate(
+    year=2024,
+    month="july"
+  ) %>% 
+  select(year, month, everything())
+
+combined_bike=
+  bind_rows(jan_2020, july_2020, jan_2024, july_2024)
+  
+```
+we will create a reader-friendly table showing the total number of rides in each combination of year and month separating casual riders and Citi Bike members. Comment on these results.
+```{r}
+ride_table=
+  combined_bike %>% 
+  group_by(year, month, member_casual) %>%
+  summarise(total_ride = n()) %>%
+  arrange(year, month, member_casual) %>% 
+  knitr::kable()
+```
 
 
 
